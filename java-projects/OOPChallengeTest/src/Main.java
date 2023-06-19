@@ -3,13 +3,14 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         boolean menuOpen = true;
-        Eye leftEye = new Eye("Left Eye", "Short Sighted", "Blue", true);
-        Eye rightEye = new Eye("Right Eye", "Normal", "Blue", true);
-        Heart heart = new Heart("Heart", "Normal", 65);
-        Stomach stomach = new Stomach("Stomach", "PUD", "Need to be fed");
-        Skin skin = new Skin("Skin", "Burned");
 
-        Patient patient = new Patient("Tom", 25, leftEye, rightEye, heart, stomach, skin);
+        Patient patient = new Patient("Tom",
+                25,
+                new Eye("Left Eye", "Short Sighted", "Blue", true),
+                new Eye("Right Eye", "Normal", "Blue", true),
+                new Heart("Heart", "Normal", 65),
+                new Stomach("Stomach", "PUD", true),
+                new Skin("Skin", "Burned", "White", 40));
 
         System.out.println("Name: " + patient.getName());
         System.out.println("Age: " + patient.getAge());
@@ -21,16 +22,15 @@ public class Main {
 
             switch (selection) {
                 case 1:
-                    organStatus(patient.getLeftEye());
+                    patient.getLeftEye().getDetails();
                     eyeMenu(patient.getLeftEye(), scanner);
                     break;
                 case 2:
-                    organStatus(patient.getRightEye());
+                    patient.getRightEye().getDetails();
                     eyeMenu(patient.getRightEye(), scanner);
                     break;
                 case 3:
-                    organStatus(patient.getHeart());
-                    System.out.println("Heart rate: " + patient.getHeart().getRate());
+                    patient.getHeart().getDetails();
                     System.out.println("\t1. Change the heart rate");
                     selection = scanner.nextInt();
                     if (selection == 1) {
@@ -40,8 +40,7 @@ public class Main {
                     }
                     break;
                 case 4:
-                    organStatus(patient.getStomach());
-                    System.out.println(patient.getStomach().getStatus());
+                    patient.getStomach().getDetails();
                     System.out.println("\t1. Digest");
                     selection = scanner.nextInt();
                     if (selection == 1) {
@@ -49,9 +48,9 @@ public class Main {
                     }
                     break;
                 case 5:
-                    organStatus(patient.getSkin());
+                    patient.getSkin().getDetails();
                     break;
-                case 6:
+                default:
                     menuOpen = false;
                     break;
             }
@@ -59,12 +58,8 @@ public class Main {
         scanner.close();
     }
 
-    public static void organStatus(Organ organ) {
-        System.out.println("Name: " + organ.getName() + "\nMedical Condition: " + organ.getMedicalCondition());
-    }
 
     public static void eyeMenu(Eye eye, Scanner scanner) {
-        System.out.println("Color: " + eye.getColor());
         if (eye.isOpen()) {
             System.out.println("\t1. Close the Eye");
             int selection = scanner.nextInt();

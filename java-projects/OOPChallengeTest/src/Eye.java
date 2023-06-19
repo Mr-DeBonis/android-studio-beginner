@@ -1,36 +1,41 @@
 public class Eye extends Organ {
-    private String color;
-    private boolean isOpen;
+    final private String color;
+    private boolean isOpened;
 
     public Eye(String name, String medicalCondition, String color, boolean isOpen) {
         super(name, medicalCondition);
         this.color = color;
-        this.isOpen = isOpen;
+        this.isOpened = isOpen;
+    }
+
+    @Override
+    public void getDetails() {
+        super.getDetails();
+        System.out.println("Color: " + this.getColor());
+
     }
 
     public void closeEye() {
-        this.isOpen = false;
+        this.setOpened(false);
         System.out.println(this.getName() + " Closed");
     }
 
     public void openEye() {
-        this.isOpen = true;
+        this.setOpened(true);
         System.out.println(this.getName() + " is open");
     }
 
     public boolean isOpen() {
-        return isOpen;
+        return isOpened;
     }
 
-    public void setOpen(boolean open) {
-        isOpen = open;
+    public void setOpened(boolean open) {
+        isOpened = open;
     }
 
     public String getColor() {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
+
 }
