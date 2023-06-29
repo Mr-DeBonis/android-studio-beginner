@@ -1,100 +1,257 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
+
+    // Add variables here, so they can be accessed from multiple methods
+    private static ArrayList<Contact> contacts;
+    private static Scanner scanner;
+    private static int id = 0;
+
     public static void main(String[] args) {
-        Map<String, String> contacts = new HashMap<>();
-        ArrayList<String> messages = new ArrayList<>();
+        /**
+         * Simulate your phone's contacts and messages applications
+         *
+         * Greet the user
+         * Show these 3 options: 1. Manage contacts  2. Messages  3. Quit
+         * In case of selecting 1 --> Show these options:
+         *      1. Show all contacts
+         *      2. Add a new contact
+         *      3. Search for a contact
+         *      4. Delete a contact
+         *      5. Go back to the previous menu
+         * In case of 2 --> show these options:
+         *      1. See the list of all messages
+         *      2. Send a new message
+         *      3. Go back to the previous menu
+         * In case of 3 --> Quit the application
+         */
 
-        Phone phone = Phone.getInstance(contacts, messages);
+        contacts = new ArrayList<>();
+        System.out.println("Welcome to my humble world of programming");
+        showInitialOptions();
 
-        boolean menuOpen = true;
-
-        System.out.println("Hello!");
-        Scanner scanner = new Scanner(System.in);
-
-        while (menuOpen) {
-            System.out.println("What would you like to do today?:\n\t1. Manage contacts\n\t2. Messages\n\t3. Quit");
-            int selection = scanner.nextInt();
-
-            switch (selection) {
-                case 1:
-                    manageContacts(scanner, phone);
-                    break;
-                case 2:
-                    manageMessages(scanner, phone);
-                    break;
-                default:
-                    menuOpen = false;
-                    break;
-            }
-        }
-        scanner.close();
     }
 
-    static void manageContacts(Scanner scanner, Phone phone) {
-        String contactName, contactNumber;
-        boolean contactMenu = true;
+    private static void showInitialOptions() {
+        System.out.println("Please select one:" +
+                "\n\t1. Manage contacts" +
+                "\n\t2. Manage messages" +
+                "\n\t3. Quit");
 
-        while (contactMenu) {
-            System.out.println("Would you like to:\n\t1. Show all contacts\n\t2. Add a new contact\n\t3. Search for a contact\n\t4. Delete a contact\n\t5. Go back to the previous menu");
-            int selection = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (selection) {
-                case 1:
-                    phone.showContacts();
-                    break;
-                case 2:
-                    System.out.println("Add new contact name:");
-                    contactName = scanner.nextLine();
-
-                    System.out.println("Add phone number:");
-                    contactNumber = scanner.nextLine();
-
-                    phone.addContact(contactName, contactNumber);
-                    break;
-                case 3:
-                    System.out.println("Enter contact name:");
-                    contactName = scanner.nextLine();
-                    phone.searchContact(contactName);
-                    break;
-                case 4:
-                    System.out.println("Enter contact name:");
-                    contactName = scanner.nextLine();
-                    phone.deleteContact(contactName);
-                    break;
-                default:
-                    contactMenu = false;
-                    break;
-            }
+        scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                manageContacts();
+                break;
+            case 2:
+                manageMessages();
+                break;
+            default:
+                break;
         }
     }
 
-    static void manageMessages(Scanner scanner, Phone phone) {
-        String message;
-        boolean messageMenu = true;
-
-        while (messageMenu) {
-            System.out.println("Would you like to:\n\t1. See the list of all messages\n\t2. Send a new message\n\t3. Go back to the previous menu");
-            int selection = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (selection) {
-                case 1:
-                    phone.showMessages();
-                    break;
-                case 2:
-                    System.out.println("Enter a new message");
-                    message = scanner.nextLine();
-                    phone.sendMessage(message);
-                    break;
-                default:
-                    messageMenu = false;
-                    break;
-            }
+    private static void manageMessages() {
+        System.out.println("Please select one:" +
+                "\n\t1. Show all messages" +
+                "\n\t2. Send a new message" +
+                "\n\t3. Go Back");
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                showAllMessages();
+                break;
+            case 2:
+                sendNewMessage();
+                break;
+            default:
+                showInitialOptions();
+                break;
         }
     }
+
+    private static void sendNewMessage() {
+        System.out.println("Who are you going to send a message?");
+        String name = scanner.next();
+        if (name.equals("")) {
+            System.out.println("Please enter the name of the contact");
+            sendNewMessage();
+        } else {
+            boolean doesExist = false;
+            for (Contact contact : contacts) {
+                if (contact.getName().equals(name)) {
+                    doesExist = true;
+                    break;
+                }
+            }
+
+            if (doesExist) {
+                System.out.println("What are you going to say?");
+                String text = scanner.next();
+                if (text.equals("")) {
+                    System.out.println("Please enter some message");
+                    sendNewMessage();
+                } else {
+                    id++;
+                    Message newMessage = new Message(text, name, id);
+                    for (Contact contact : contacts) {
+                        if (contact.getName().equals(name)) {
+                            ArrayList<Message> newMessages = contact.getMessages();
+                            newMessages.add(newMessage);
+                            contact.setMessages(newMessages);
+                        }
+                    }
+                }
+            } else {
+                System.out.println("There is no such a contact");
+            }
+        }
+        showAllMessages();
+    }
+
+    private static void showAllMessages() {
+        ArrayList<Message> allMessages = new ArrayList<>();
+        for (Contact contact : contacts) {
+            allMessages.addAll(contact.getMessages());
+        }
+
+        if (allMessages.size() > 0) {
+            for (Message message : allMessages) {
+                message.getDetails();
+                System.out.println("****************");
+
+            }
+        } else {
+            System.out.println("You don't have any messages");
+        }
+
+        showInitialOptions();
+    }
+
+    private static void manageContacts() {
+
+        System.out.println("Please select one:" +
+                "\n\t1. Show all contacts" +
+                "\n\t2. Add a new contact" +
+                "\n\t3. Search for a contact" +
+                "\n\t4. Delete a contact" +
+                "\n\t5. Go Back");
+
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                showAllContacts();
+                break;
+            case 2:
+                addNewContact();
+                break;
+            case 3:
+                searchForContact();
+                break;
+            case 4:
+                deleteContact();
+                break;
+            default:
+                showInitialOptions();
+                break;
+        }
+    }
+
+    private static void deleteContact() {
+        System.out.println("Please enter the contact's name: ");
+        String name = scanner.next();
+        if (name.equals("")) {
+            System.out.println("Please enter the name");
+            deleteContact();
+        } else {
+            boolean doesExist = false;
+
+            for (Contact contact : contacts) {
+                if (contact.getName().equals(name)) {
+                    doesExist = true;
+                    contacts.remove(contact);
+                }
+            }
+
+            if (!doesExist) {
+                System.out.println("There is no such contact in your phone");
+            }
+        }
+
+        showInitialOptions();
+    }
+
+    private static void searchForContact() {
+        System.out.println("Please enter the contact's name: ");
+        String name = scanner.next();
+        if (name.equals("")) {
+            System.out.println("Please enter the name");
+            searchForContact();
+        } else {
+            boolean doesExist = false;
+            for (Contact contact : contacts) {
+                if (contact.getName().equals(name)) {
+                    doesExist = true;
+                    contact.getDetails();
+                }
+            }
+
+            if (!doesExist) {
+                System.out.println("There is no such contact in your phone");
+            }
+        }
+
+        showInitialOptions();
+    }
+
+    private static void addNewContact() {
+        System.out.println("Adding a new contact..." +
+                "\nPlease enter the contact name:");
+        String name = scanner.next();
+        System.out.println("Please enter contact's number:");
+        String number = scanner.next();
+        System.out.println("Please enter contact's email:");
+        String email = scanner.next();
+
+        if (name.equals("") || number.equals("") || email.equals("")) {
+            System.out.println("Please enter all of the information");
+            addNewContact();
+        } else {
+
+            boolean doesExist = false;
+            for (Contact contact : contacts) {
+                if (contact.getName().equals(name)) {
+                    doesExist = true;
+                    break;
+                }
+            }
+
+            if (doesExist) {
+                System.out.println("We have a contact named " + name + " on this device");
+            } else {
+                Contact contact = new Contact(name, number, email);
+                contacts.add(contact);
+                System.out.println(name + " added successfully");
+            }
+        }
+
+        showInitialOptions();
+
+    }
+
+    private static void showAllContacts() {
+        if (contacts.size()>0) {
+            for (Contact contact : contacts) {
+                contact.getDetails();
+                System.out.println("****************");
+            }
+        } else{
+            System.out.println("You do not have any contacts");
+        }
+        showInitialOptions();
+    }
+
+
 }
