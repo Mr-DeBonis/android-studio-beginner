@@ -20,11 +20,6 @@ public class Contact {
         this.messages = new ArrayList<>();
     }
 
-    public void getDetails(){
-        System.out.println("Name: " + this.name +
-                "\nNumber: " + this.number +
-                "\nEmail: " + this.email);
-    }
     public String getName() {
         return name;
     }
@@ -55,5 +50,12 @@ public class Contact {
 
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + this.name +
+                "\nNumber: " + this.number +
+                "\nEmail: " + this.email;
     }
 }

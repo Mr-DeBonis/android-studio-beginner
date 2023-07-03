@@ -9,12 +9,6 @@ public class Message {
         this.id = id;
     }
 
-    public void getDetails(){
-        System.out.println("Id: " + id +
-                "\nContact Name: " + recipient +
-                "\nMessage: " + text);
-    }
-
     public String getText() {
         return text;
     }
@@ -37,5 +31,12 @@ public class Message {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Id: " + id +
+                "\nContact Name: " + recipient +
+                "\nMessage: " + text;
     }
 }

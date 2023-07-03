@@ -79,33 +79,25 @@ public class Main {
             System.out.println("Please enter the name of the contact");
             sendNewMessage();
         } else {
-            boolean doesExist = false;
-            for (Contact contact : contacts) {
-                if (contact.getName().equals(name)) {
-                    doesExist = true;
-                    break;
-                }
-            }
+            Contact contact = searchContactByName(name);
 
-            if (doesExist) {
+            if (contact != null) {
                 System.out.println("What are you going to say?");
-                String text = scanner.next();
+                scanner.nextLine();
+                String text = scanner.nextLine();
                 if (text.equals("")) {
                     System.out.println("Please enter some message");
                     sendNewMessage();
                 } else {
                     id++;
                     Message newMessage = new Message(text, name, id);
-                    for (Contact contact : contacts) {
-                        if (contact.getName().equals(name)) {
-                            ArrayList<Message> newMessages = contact.getMessages();
-                            newMessages.add(newMessage);
-                            contact.setMessages(newMessages);
-                        }
-                    }
+                    ArrayList<Message> newMessages = contact.getMessages();
+                    newMessages.add(newMessage);
+                    contact.setMessages(newMessages);
                 }
             } else {
                 System.out.println("There is no such a contact");
+                manageMessages();
             }
         }
         showAllMessages();
@@ -119,15 +111,14 @@ public class Main {
 
         if (allMessages.size() > 0) {
             for (Message message : allMessages) {
-                message.getDetails();
+                System.out.println(message);
                 System.out.println("****************");
-
             }
         } else {
             System.out.println("You don't have any messages");
         }
 
-        showInitialOptions();
+        manageMessages();
     }
 
     private static void manageContacts() {
@@ -166,21 +157,17 @@ public class Main {
             System.out.println("Please enter the name");
             deleteContact();
         } else {
-            boolean doesExist = false;
+            Contact contact = searchContactByName(name);
 
-            for (Contact contact : contacts) {
-                if (contact.getName().equals(name)) {
-                    doesExist = true;
-                    contacts.remove(contact);
-                }
-            }
-
-            if (!doesExist) {
+            if (contact != null) {
+                contacts.remove(contact);
+                System.out.println("Contact deleted");
+            } else {
                 System.out.println("There is no such contact in your phone");
             }
         }
 
-        showInitialOptions();
+        manageContacts();
     }
 
     private static void searchForContact() {
@@ -190,20 +177,16 @@ public class Main {
             System.out.println("Please enter the name");
             searchForContact();
         } else {
-            boolean doesExist = false;
-            for (Contact contact : contacts) {
-                if (contact.getName().equals(name)) {
-                    doesExist = true;
-                    contact.getDetails();
-                }
-            }
 
-            if (!doesExist) {
+            Contact contact = searchContactByName(name);
+            if (contact != null) {
+                System.out.println(contact);
+            } else {
                 System.out.println("There is no such contact in your phone");
             }
         }
 
-        showInitialOptions();
+        manageContacts();
     }
 
     private static void addNewContact() {
@@ -221,36 +204,39 @@ public class Main {
         } else {
 
             boolean doesExist = false;
-            for (Contact contact : contacts) {
-                if (contact.getName().equals(name)) {
-                    doesExist = true;
-                    break;
-                }
-            }
 
-            if (doesExist) {
+            Contact contact = searchContactByName(name);
+
+            if (contact != null) {
                 System.out.println("We have a contact named " + name + " on this device");
             } else {
-                Contact contact = new Contact(name, number, email);
+                contact = new Contact(name, number, email);
                 contacts.add(contact);
                 System.out.println(name + " added successfully");
             }
         }
-
-        showInitialOptions();
-
+        manageContacts();
     }
 
     private static void showAllContacts() {
-        if (contacts.size()>0) {
+        if (contacts.size() > 0) {
             for (Contact contact : contacts) {
-                contact.getDetails();
+                System.out.println(contact);
                 System.out.println("****************");
             }
-        } else{
+        } else {
             System.out.println("You do not have any contacts");
         }
-        showInitialOptions();
+        manageContacts();
+    }
+
+    private static Contact searchContactByName(String name) {
+        for (Contact contact : contacts) {
+            if (contact.getName().equals(name)) {
+                return contact;
+            }
+        }
+        return null;
     }
 
 
