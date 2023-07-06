@@ -1,9 +1,14 @@
 package org.mrdebonis.xmlfilessection1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,5 +21,25 @@ public class MainActivity extends AppCompatActivity {
 
         txtHello = findViewById(R.id.txtHello);
         txtHello.setText(getString(R.string.hello));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.settings_menu) {
+            Toast.makeText(this, "Settings Selected", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.alarm_menu) {
+            Toast.makeText(this, "Alarm Selected", Toast.LENGTH_SHORT).show();
+        }
+
+        return true;
     }
 }
