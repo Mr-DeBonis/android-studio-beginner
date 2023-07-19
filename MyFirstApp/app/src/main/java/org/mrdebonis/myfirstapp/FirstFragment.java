@@ -6,15 +6,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import org.mrdebonis.myfirstapp.databinding.FragmentFirstBinding;
+
+import java.util.Objects;
 
 public class FirstFragment extends Fragment {
 
@@ -22,15 +27,16 @@ public class FirstFragment extends Fragment {
     TextView showCountTextView;
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         showCountTextView = binding.textviewFirst;
-        return binding.getRoot();
 
+        Window window = FirstFragment.this.requireActivity().getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(FirstFragment.super.requireContext(), R.color.screenBackground));
+
+        return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -41,12 +47,10 @@ public class FirstFragment extends Fragment {
             public void onClick(View view) {
                 // Send count to secondFragment
                 int currentCount = Integer.parseInt(showCountTextView.getText().toString());
-                FirstFragmentDirections.ActionFirstFragmentToSecondFragment action =
-                        FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount);
+                FirstFragmentDirections.ActionFirstFragmentToSecondFragment action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount);
 
                 Log.d("FirstFragment", "onClick: " + currentCount);
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(action);
+                NavHostFragment.findNavController(FirstFragment.this).navigate(action);
 
             }
         });

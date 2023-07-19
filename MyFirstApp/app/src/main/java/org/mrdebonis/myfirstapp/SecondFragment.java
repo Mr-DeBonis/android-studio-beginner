@@ -5,14 +5,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import org.mrdebonis.myfirstapp.databinding.FragmentSecondBinding;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class SecondFragment extends Fragment {
@@ -25,6 +29,12 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
+
+        Window window = SecondFragment.this.requireActivity().getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(SecondFragment.super.requireContext(), R.color.screenBackground2));
+
         return binding.getRoot();
 
     }
